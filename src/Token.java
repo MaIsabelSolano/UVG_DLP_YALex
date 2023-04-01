@@ -5,13 +5,18 @@ import java.util.ArrayList;
 public class Token {
 
     private String lexeme;
-    private ArrayList<Token> value;
+    private ArrayList<Token> value = new ArrayList<>();
     private String function; 
     private boolean terminal;
 
     public Token(String lexeme, ArrayList<Token> value, boolean terminal) {
         this.lexeme = lexeme;
         this.value = value;
+        this.terminal = terminal;
+    }
+
+    public Token(String lexeme, Boolean terminal) {
+        this.lexeme = lexeme;
         this.terminal = terminal;
     }
 
@@ -30,6 +35,10 @@ public class Token {
 
     public void setFunction(String function) {
         this.function = function;
+    }
+
+    public void addValueToken(Token t) {
+        value.add(t);
     }
 
     @Override

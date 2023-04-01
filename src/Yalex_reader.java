@@ -5,11 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.security.auth.login.Configuration;
+
 public class Yalex_reader{
 
     private String file_name = "";
     private BufferedReader reader;
     private ArrayList<String> info = new ArrayList<>();
+    private ArrayList<String> lets = new ArrayList<>();
+    private ArrayList<String> rules = new ArrayList<>();
 
     public Yalex_reader(String filename) {
         this.file_name = filename;
@@ -17,7 +21,10 @@ public class Yalex_reader{
 
     public void read() {
         fileToInfo();
-        
+        separateGroups();
+        letsToTokens();
+        rulesToToken();
+        tokensToSymbolRegex();
     }
 
     private void fileToInfo() {
@@ -79,5 +86,87 @@ public class Yalex_reader{
             e.printStackTrace();
         }
     }
+
+    private void separateGroups() {
+        boolean rule_conf = false;
+        int pos = 0;
+        for (int i = 0; i < info.size(); i++) {
+            String cofiguration = info.get(i).split(" ")[0];
+            // check for lets
+            if (cofiguration.equals("let")) {
+                lets.add(info.get(i));
+
+            } else if (cofiguration.equals("rule")) {
+                pos = i;
+                break;
+            }
+        }
+
+        for (int i = pos + 1 ; i < info.size(); i++) {
+            rules.add(info.get(i));
+
+        }
+
+    }
+
+    private void letsToTokens() {
+        for (int i = 0; i < lets.size(); i++) {
+            String[] line = lets.get(i).split(" ");
+
+            // 0: let
+            // 1: name
+            // 2: = 
+            // 3: value
+
+            String tokenName = line[1];
+
+            char[] value = line[3].toCharArray();
+
+            if (value[3] == '[') {
+                // It's a simple definition
+
+            } else {
+                // check for other lexemes in value
+                String foundLex = "";
+                int foundLatestTokenPos = 0;
+                int pos = 0;
+                String value_copy = new String(value);
+                while (value_copy.trim() != null) {
+                    for (int c = pos; c < value.length; c++) {
+                        foundLex += c;
+
+                        // Check if lexeme exists
+                        if (Universal.tokenExist(foundLex)) {
+                            Token t = Universal.getToken(foundLex);
+
+
+                            foundLatestTokenPos = c;
+                        }
+                    }
+
+                    // check for change
+                    if (pos == foundLatestTokenPos) {
+                        // no lexeme was found
+
+                    } else {
+
+                    }
+
+                    pos = foundLatestTokenPos;
+                }
+                
+            }
+
+            
+    
+        }
+
+    }
+
+    private void rulesToToken() {
+
+    }
+
+    private void tokensToSymbolRegex() {}
 
 }
