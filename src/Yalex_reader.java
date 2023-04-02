@@ -111,7 +111,11 @@ public class Yalex_reader{
 
     private void letsToTokens() {
         for (int i = 0; i < lets.size(); i++) {
-            String[] line = lets.get(i).split(" ");
+            String[] line = lets.get(i).split(" ", 4);
+            System.out.println("\nline");
+            for (int s = 0; s < line.length; s++) {
+                System.out.print(line[s] + "("+ s +") ");
+            }
 
             // 0: let
             // 1: name
@@ -122,42 +126,87 @@ public class Yalex_reader{
 
             char[] value = line[3].toCharArray();
 
-            if (value[3] == '[') {
+            Token currentToken = new Token(tokenName, false);
+
+            if (value[0] == '[') {
                 // It's a simple definition
 
             } else {
+                System.out.println("\nelse");
                 // check for other lexemes in value
                 String foundLex = "";
+                String lastFoundLex = "";
                 int foundLatestTokenPos = 0;
-                int pos = 0;
-                String value_copy = new String(value);
-                while (value_copy.trim() != null) {
-                    for (int c = pos; c < value.length; c++) {
-                        foundLex += c;
+                // char[] value_copy = new char[value.length];
+                // System.arraycopy(value, 0, value_copy, 0, value.length);
+                while (value.length > 0) {
+                    for (int c = 0; c < value.length; c++) {
+                        foundLex += value[c];
+                        System.out.println("current " + foundLex);
 
                         // Check if lexeme exists
-                        if (Universal.tokenExist(foundLex)) {
-                            Token t = Universal.getToken(foundLex);
-
+                        if (Universal.tokenExist(Universal.tokens, foundLex)) {
 
                             foundLatestTokenPos = c;
+                            lastFoundLex = new String(foundLex);
                         }
                     }
-
+                    System.out.println("Last full found lex: " + lastFoundLex);
                     // check for change
-                    if (pos == foundLatestTokenPos) {
+                    if (0 == foundLatestTokenPos) {
                         // no lexeme was found
+                        String currentChar = "" + value[0];
 
-                    } else {
+                        Token t = new Token(currentChar, true);
+
+                        currentToken.addValueToken(t);
+
+                        // Copy value to array
+                        String value_temp = "";
+                        for (char val_c: value) value_temp += val_c;
+
+                        // remove the newest found lexeme from value
+                        value_temp = value_temp.substring(foundLatestTokenPos+1);
+
+                        // retrun to value
+                        value = value_temp.toCharArray();
+
+                        foundLatestTokenPos = 0;
+                        lastFoundLex = "";
+                        foundLex = "";
+
+                    } else if (!lastFoundLex.equals("")) {
+                        // A lexeme was found
+                        Token t = Universal.getToken(Universal.tokens, lastFoundLex);
+
+                        // Add the new token to the curren token's value
+                        currentToken.addValueToken(t);
+                        
+                        // Copy value to array
+                        String value_temp = "";
+                        for (char val_c: value) value_temp += val_c;
+
+                        // remove the newest found lexeme from value
+                        value_temp = value_temp.substring(foundLatestTokenPos+1);
+
+                        // retrun to value
+                        value = value_temp.toCharArray();
+
+                        foundLatestTokenPos = 0;
+                        lastFoundLex = "";
+                        foundLex = "";
 
                     }
-
-                    pos = foundLatestTokenPos;
                 }
                 
             }
 
-            
+            // Add current token to the list of existing tokens
+            Universal.tokens.add(currentToken);
+
+            for (Token t: Universal.tokens) {
+                System.out.println(t);
+            }
     
         }
 

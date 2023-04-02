@@ -6,17 +6,16 @@ public class Universal {
 
     static ArrayList<Token> tokens = new ArrayList<>();
 
-    static boolean tokenExist(String lex) {
-        for (Token t: tokens) {
+    public static boolean tokenExist(ArrayList<Token> toks, String lex) {
+        for (Token t: toks) {
             if (t.getLexeme().equals(lex)) return true;
-            break;
         }
 
         return false;
     }
 
-    static Token getToken(String lex)  {
-        for (Token t: tokens) {
+    public static Token getToken(ArrayList<Token> toks, String lex)  {
+        for (Token t: toks) {
             if (t.getLexeme().equals(lex)) return t;
         }
 
