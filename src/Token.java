@@ -20,6 +20,12 @@ public class Token {
         this.terminal = terminal;
     }
 
+    public void deleteLastOr() {
+        if (value.get(value.size()-1).lexeme.equals("|")) {
+            value.remove(value.size()-1);
+        }
+    }
+
     /* Getters and setters */
     public String getLexeme() {
         return lexeme;
@@ -44,15 +50,15 @@ public class Token {
     @Override
     public String toString() {
         String print = "";
-        print += "\n{";
+        print += "{";
         print += "\n\tlexeme: \"" + lexeme+ "\""; 
         print += "\n\tvalue: [";
         for (Token t: value) {
-            print += t.getLexeme() + ", ";
+            print += t.getLexeme();
         }
         print += "]";
         print += "\n\tfunction: " + function;
-        print += "\n\n}";
+        print += "\n}";
         return print;
     }
     

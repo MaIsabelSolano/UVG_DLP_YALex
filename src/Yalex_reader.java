@@ -14,6 +14,10 @@ public class Yalex_reader{
     private ArrayList<String> lets = new ArrayList<>();
     private ArrayList<String> rules = new ArrayList<>();
 
+    private ArrayList<Token> tokens = new ArrayList<>();
+
+    private ArrayList<Symbol> regex = new ArrayList<>();
+
     public Yalex_reader(String filename) {
         this.file_name = filename;
     }
@@ -22,8 +26,7 @@ public class Yalex_reader{
         fileToInfo();
         separateGroups();
         letsToTokens();
-        rulesToToken();
-        tokensToSymbolRegex();
+        rulesToRegex();
     }
 
     private void fileToInfo() {
@@ -31,7 +34,6 @@ public class Yalex_reader{
             reader = new BufferedReader(new FileReader(file_name));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
                 if (!line.trim().isEmpty()) {
                     // if it's not empty 
                     String temp_line = "";
@@ -75,11 +77,6 @@ public class Yalex_reader{
             }
             reader.close();
 
-            // DELETE LATER
-            System.out.println("no comments:");
-            for (int i = 0; i < info.size(); i++) {
-                System.out.println(info.get(i));
-            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -120,10 +117,10 @@ public class Yalex_reader{
             // 3: value
 
             String tokenName = line[1];
-
             char[] value = line[3].toCharArray();
 
             Token currentToken = new Token(tokenName, false);
+            Token or = new Token("|", true);
 
             if (value[0] == '[') {
                 // It's a simple definition
@@ -154,6 +151,9 @@ public class Yalex_reader{
                                     String lexemeName = Integer.toString(digit);
                                     Token t = new Token(lexemeName, true);
                                     currentToken.addValueToken(t);
+
+                                    // check if is not the last | to not include it
+                                    currentToken.addValueToken(or);
                                 }
                                 c += 2; // skip the - and the last value
 
@@ -169,6 +169,9 @@ public class Yalex_reader{
                                 for (Alphabet x: subset) {
                                     Token t = new Token(x.toString(), true);
                                     currentToken.addValueToken(t);
+
+                                    // check if is not the last | to not include it
+                                    currentToken.addValueToken(or);
                                 }
                                 c += 2; // skip the - and the last value
 
@@ -180,6 +183,9 @@ public class Yalex_reader{
                                 Token t = new Token(lexemeName, true);
                                 currentToken.addValueToken(t);
 
+                                // check if is not the last | to not include it
+                                if (c + 2 < value.length) currentToken.addValueToken(or);
+
                                 c += 1;
 
                             } else if (value[c + 1] == 'n') {
@@ -187,16 +193,25 @@ public class Yalex_reader{
                                 Token t = new Token(lexemeName, true);
                                 currentToken.addValueToken(t);
 
+                                // check if is not the last | to not include it
+                                if (c + 2 < value.length) currentToken.addValueToken(or);
+
                                 c += 1;
                             }
 
                         } else {
                             Token t = new Token(""+value[c], true);
                             currentToken.addValueToken(t);
+
+                            // check if is not the last | to not include it
+                            if (c + 1 < value.length) currentToken.addValueToken(or);
                             
                         }
                     }
                 }
+
+                // Delete the last or
+                currentToken.deleteLastOr();
                 
 
             } else {
@@ -212,7 +227,7 @@ public class Yalex_reader{
 
 
                         // Check if lexeme exists
-                        if (tokenExist(Universal.tokens, foundLex)) {
+                        if (tokenExist(tokens, foundLex)) {
 
                             foundLatestTokenPos = c;
                             lastFoundLex = new String(foundLex);
@@ -243,7 +258,7 @@ public class Yalex_reader{
 
                     } else if (!lastFoundLex.equals("")) {
                         // A lexeme was found
-                        Token t = getToken(Universal.tokens, lastFoundLex);
+                        Token t = getToken(tokens, lastFoundLex);
 
                         // Add the new token to the curren token's value
                         currentToken.addValueToken(t);
@@ -268,23 +283,32 @@ public class Yalex_reader{
             }
 
             // Add current token to the list of existing tokens
-            Universal.tokens.add(currentToken);
+            tokens.add(currentToken);
     
         }
 
         System.out.println("\n_______Lexemes_______");
-        for (Token t: Universal.tokens) {
+        for (Token t: tokens) {
             System.out.println(t);
         }
 
     }
 
-    private void rulesToToken() {
+    /** */
+    private void rulesToRegex() {
+
+        for (String line: rules) {
+            System.out.println(line);
+        }
 
     }
 
-    private void tokensToSymbolRegex() {}
-
+    /**
+     * 
+     * @param toks
+     * @param lex
+     * @return
+     */
     private boolean tokenExist(ArrayList<Token> toks, String lex) {
         for (Token t: toks) {
             if (t.getLexeme().equals(lex)) return true;
@@ -293,6 +317,12 @@ public class Yalex_reader{
         return false;
     }
 
+    /**
+     * 
+     * @param toks
+     * @param lex
+     * @return
+     */
     private Token getToken(ArrayList<Token> toks, String lex)  {
         for (Token t: toks) {
             if (t.getLexeme().equals(lex)) return t;

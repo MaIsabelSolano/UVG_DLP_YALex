@@ -11,6 +11,7 @@ public class Symbol {
     
     public int id; //ASCII
     public char c_id;
+    private boolean isOperator = false;
 
     /**
      * Symbol class constructor
@@ -28,16 +29,26 @@ public class Symbol {
      * or part of the alphabet
      * @return  If the symbol is an operator or not. 
     */
-    public boolean isOperator(){
-        boolean operator = false;
-        if (c_id == '|' || c_id == '?' ||
-            c_id == '+' || c_id == '*' ||
-            c_id == '(' || c_id == ')' ||
-            c_id == '.') {
-                operator = true;
-        }
+    // public boolean isOperator(){
+    //     boolean operator = false;
+    //     if (c_id == '|' || c_id == '?' ||
+    //         c_id == '+' || c_id == '*' ||
+    //         c_id == '(' || c_id == ')' ||
+    //         c_id == '.') {
+    //             operator = true;
+    //     }
 
-        return operator;
+    //     return operator;
+    // }
+
+    /* Getters and setters */
+
+    public boolean isOperator() {
+        return isOperator;
+    }
+
+    public void setOperator(boolean isOperator) {
+        this.isOperator = isOperator;
     }
 
     @Override
