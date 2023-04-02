@@ -1,6 +1,6 @@
 /*
- * @Author Maria Isabel Solano
- * @version 0.1, 24/02/23
+ * @author: Ma. Isabel Solano
+ * @version 3, 02/04/23
  * 
  * Infix To Postfix class that recieves a String with a regular 
  * expression and a HashMap with the accepted alphabet, and 

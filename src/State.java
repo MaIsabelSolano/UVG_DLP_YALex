@@ -1,6 +1,6 @@
 /*
  * @author: Ma. Isabel Solano
- * @version 2, 19/03/23
+ * @version 3, 02/04/23
  * 
  * States of an authomata
  * 
@@ -47,7 +47,6 @@ public class State implements Comparable<State> {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return Integer.toString(id);
     }
 
