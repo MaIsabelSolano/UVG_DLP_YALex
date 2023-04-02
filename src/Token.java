@@ -35,6 +35,10 @@ public class Token {
         return function;
     }
 
+    public ArrayList<Token> getValue() {
+        return value;
+    }
+
     public boolean isTerminal() {
         return terminal;
     }
@@ -47,6 +51,10 @@ public class Token {
         value.add(t);
     }
 
+    public void addValueToken(Token t, int pos) {
+        value.add(pos, t);
+    }
+
     @Override
     public String toString() {
         String print = "";
@@ -54,7 +62,7 @@ public class Token {
         print += "\n\tlexeme: \"" + lexeme+ "\""; 
         print += "\n\tvalue: [";
         for (Token t: value) {
-            print += t.getLexeme();
+            print += t.getLexeme() + " ";
         }
         print += "]";
         print += "\n\tfunction: " + function;

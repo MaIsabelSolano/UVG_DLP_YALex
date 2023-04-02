@@ -18,6 +18,9 @@ public class Yalex_reader{
 
     private ArrayList<Symbol> regex = new ArrayList<>();
 
+    private Symbol LEFTPARAM = new Symbol('(');
+    private Symbol RIGHTPARAM = new Symbol(')');
+
     public Yalex_reader(String filename) {
         this.file_name = filename;
     }
@@ -197,6 +200,16 @@ public class Yalex_reader{
                                 if (c + 2 < value.length) currentToken.addValueToken(or);
 
                                 c += 1;
+
+                            } else if (value[c + 1] == 's') {
+                                String lexemeName = " ";
+                                Token t = new Token(lexemeName, true);
+                                currentToken.addValueToken(t);
+
+                                // check if is not the last | to not include it
+                                if (c + 2 < value.length) currentToken.addValueToken(or);
+
+                                c += 1;
                             }
 
                         } else {
@@ -249,7 +262,7 @@ public class Yalex_reader{
                         // remove the newest found lexeme from value
                         value_temp = value_temp.substring(foundLatestTokenPos+1);
 
-                        // retrun to value
+                        // return to value
                         value = value_temp.toCharArray();
 
                         foundLatestTokenPos = 0;
@@ -261,7 +274,9 @@ public class Yalex_reader{
                         Token t = getToken(tokens, lastFoundLex);
 
                         // Add the new token to the curren token's value
+                        currentToken.addValueToken(new Token("(", true));
                         currentToken.addValueToken(t);
+                        currentToken.addValueToken(new Token(")", true));
                         
                         // Copy value to array
                         String value_temp = "";
@@ -287,19 +302,97 @@ public class Yalex_reader{
     
         }
 
-        System.out.println("\n_______Lexemes_______");
-        for (Token t: tokens) {
-            System.out.println(t);
-        }
+        // System.out.println("\n_______Lexemes_______");
+        // for (Token t: tokens) {
+        //     System.out.println(t);
+        // }
 
     }
 
     /** */
     private void rulesToRegex() {
 
+        System.out.println("\n_______Rules_______");
+
         for (String line: rules) {
+            line = line.replaceAll("\\s+", " ");
+            line = line.substring(1);
+            if (line.charAt(0) == '|') line = line.substring(2);
+            line = line.replaceAll("\'", "");
             System.out.println(line);
+
+            String[] line_arr = line.split(" ", 2);
+
+            // line_arr[0]: token name
+            // line_arr[1]: function (optional)
+            
+            // determine whether or not the token exists or not
+            if (tokenExist(tokens, line_arr[0])) {
+                // token is already in the token arraylist
+                Token currentToken = getToken(tokens, line_arr[0]);
+                
+                ArrayList<Symbol> temp = new ArrayList<>();
+                temp.add(LEFTPARAM);
+                temp.addAll(Production(currentToken, new ArrayList<Symbol>()));
+                temp.add(RIGHTPARAM);
+                System.out.println("\nProd:\n");
+                for (Symbol s: temp) System.out.print(s.c_id);
+                System.out.println();
+
+                regex.addAll(temp);
+                regex.add(new Symbol('|'));
+
+                // update and add function
+                if (line_arr.length > 1) {
+                    Token tempToken = currentToken;
+                    tempToken.setFunction(line_arr[1]);
+                    
+                    // update
+                    tokens.set(tokens.indexOf(currentToken), tempToken);
+
+                }
+
+            } else {
+                // token needs to be added
+
+                Token currentToken = new Token(line_arr[0], true);
+
+                Symbol sym = new Symbol(line_arr[0].charAt(0));
+                
+                System.out.println("\nProd: " + sym);
+                // Add to regex
+                regex.add(sym);
+                regex.add(new Symbol('|'));
+
+                // Check for function 
+                if (line_arr.length > 1) {
+                    currentToken.setFunction(line_arr[1]);
+                }
+                // Add to tokens
+                tokens.add(currentToken);
+            }
+
+            
         }
+
+        // removing the last or
+        if (regex.get(regex.size() - 1).c_id == '|') {
+            regex.remove(regex.size() - 1);
+        }
+
+        System.out.println("\n_______Lexemes_______");
+        for (Token t: tokens) {
+            System.out.println(t);
+        }
+
+        System.out.println("\n_______Regex_______");
+        System.out.println();
+        for (Symbol s: regex) {
+            System.out.print(s);
+        }
+        System.out.println();
+
+        
 
     }
 
@@ -329,6 +422,40 @@ public class Yalex_reader{
         }
 
         return null;
+    }
+
+    /**
+     * Syntactic Analysis by Recursive dowfall
+     * 
+     * @param current_t
+     * @param s
+     * @return
+     */
+    public ArrayList<Symbol> Production(Token current_t, ArrayList<Symbol> s) {
+
+        Symbol sym = new Symbol(' ');
+
+        for (Token t: current_t.getValue()) {
+            // System.out.println("visiting: " + t.getLexeme());
+            if (!t.isTerminal()){
+                s = Production(t, s);
+            } 
+            else {
+                sym = new Symbol(t.getLexeme().charAt(0));
+
+                // determine if it´s an operator
+                if (
+                    t.getLexeme().charAt(0) == '|' || t.getLexeme().charAt(0) == '(' ||
+                    t.getLexeme().charAt(0) == ')' || t.getLexeme().charAt(0) == '+' ||
+                    t.getLexeme().charAt(0) == '*' || t.getLexeme().charAt(0) == '?'
+                ) {
+                    sym.setOperator(true);
+                }
+                s.add(sym);
+            }
+        }
+        return s;
+        
     }
 
 }
