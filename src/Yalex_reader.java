@@ -5,8 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.security.auth.login.Configuration;
-
 public class Yalex_reader{
 
     private String file_name = "";
@@ -88,7 +86,6 @@ public class Yalex_reader{
     }
 
     private void separateGroups() {
-        boolean rule_conf = false;
         int pos = 0;
         for (int i = 0; i < info.size(); i++) {
             String cofiguration = info.get(i).split(" ")[0];
@@ -112,7 +109,6 @@ public class Yalex_reader{
     private void letsToTokens() {
         for (int i = 0; i < lets.size(); i++) {
             String[] line = lets.get(i).split(" ", 4);
-            System.out.println("\nline");
             for (int s = 0; s < line.length; s++) {
                 System.out.print(line[s] + "("+ s +") ");
             }
@@ -132,7 +128,6 @@ public class Yalex_reader{
                 // It's a simple definition
 
             } else {
-                System.out.println("\nelse");
                 // check for other lexemes in value
                 String foundLex = "";
                 String lastFoundLex = "";
@@ -142,16 +137,15 @@ public class Yalex_reader{
                 while (value.length > 0) {
                     for (int c = 0; c < value.length; c++) {
                         foundLex += value[c];
-                        System.out.println("current " + foundLex);
+
 
                         // Check if lexeme exists
-                        if (Universal.tokenExist(Universal.tokens, foundLex)) {
+                        if (tokenExist(Universal.tokens, foundLex)) {
 
                             foundLatestTokenPos = c;
                             lastFoundLex = new String(foundLex);
                         }
                     }
-                    System.out.println("Last full found lex: " + lastFoundLex);
                     // check for change
                     if (0 == foundLatestTokenPos) {
                         // no lexeme was found
@@ -177,7 +171,7 @@ public class Yalex_reader{
 
                     } else if (!lastFoundLex.equals("")) {
                         // A lexeme was found
-                        Token t = Universal.getToken(Universal.tokens, lastFoundLex);
+                        Token t = getToken(Universal.tokens, lastFoundLex);
 
                         // Add the new token to the curren token's value
                         currentToken.addValueToken(t);
@@ -217,5 +211,21 @@ public class Yalex_reader{
     }
 
     private void tokensToSymbolRegex() {}
+
+    private boolean tokenExist(ArrayList<Token> toks, String lex) {
+        for (Token t: toks) {
+            if (t.getLexeme().equals(lex)) return true;
+        }
+
+        return false;
+    }
+
+    private Token getToken(ArrayList<Token> toks, String lex)  {
+        for (Token t: toks) {
+            if (t.getLexeme().equals(lex)) return t;
+        }
+
+        return null;
+    }
 
 }
