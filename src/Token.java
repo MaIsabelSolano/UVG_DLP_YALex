@@ -52,7 +52,7 @@ public class Token {
         }
         print += "]";
         print += "\n\tfunction: " + function;
-        print += "}";
+        print += "\n\n}";
         return print;
     }
     

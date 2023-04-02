@@ -111,7 +111,7 @@ public class Yalex_reader{
         for (int i = 0; i < lets.size(); i++) {
             String[] line = lets.get(i).split(" ", 4);
             for (int s = 0; s < line.length; s++) {
-                System.out.print(line[s] + "("+ s +") ");
+                // System.out.print(line[s] + "("+ s +") ");
             }
 
             // 0: let
@@ -134,13 +134,13 @@ public class Yalex_reader{
                         value_string += value[c];
                     }
                 }
-
-                System.out.println("\n"+value_string);
                 value = value_string.toCharArray();
 
                 for (int c = 0; c < value.length; c++) {
                     if (c + 1 >= value.length) {
                         // End fo list
+                        Token t = new Token(""+value[c], true);
+                        currentToken.addValueToken(t);
                     }
                     else {
                         if (value[c + 1] == '-') {
@@ -159,7 +159,7 @@ public class Yalex_reader{
 
                             } else if (Character.isLetter(value[c]) && Character.isLetter(value[c + 2])) {
                                 int begining = Alphabet.valueOf(""+value[c]).ordinal();
-                                int end = Alphabet.valueOf(""+value[c+2]).ordinal();
+                                int end = Alphabet.valueOf(""+value[c+2]).ordinal() + 1;
 
                                 Alphabet[] subset = Arrays.copyOfRange(
                                     Alphabet.values(),
@@ -174,6 +174,26 @@ public class Yalex_reader{
 
 
                             }
+                        } else if (value[c] == '\\') {
+                            if (value[c + 1] == 't') {
+                                String lexemeName = "\t";
+                                Token t = new Token(lexemeName, true);
+                                currentToken.addValueToken(t);
+
+                                c += 1;
+
+                            } else if (value[c + 1] == 'n') {
+                                String lexemeName = "\n";
+                                Token t = new Token(lexemeName, true);
+                                currentToken.addValueToken(t);
+
+                                c += 1;
+                            }
+
+                        } else {
+                            Token t = new Token(""+value[c], true);
+                            currentToken.addValueToken(t);
+                            
                         }
                     }
                 }
@@ -249,11 +269,12 @@ public class Yalex_reader{
 
             // Add current token to the list of existing tokens
             Universal.tokens.add(currentToken);
-
-            for (Token t: Universal.tokens) {
-                System.out.println(t);
-            }
     
+        }
+
+        System.out.println("\n_______Lexemes_______");
+        for (Token t: Universal.tokens) {
+            System.out.println(t);
         }
 
     }
