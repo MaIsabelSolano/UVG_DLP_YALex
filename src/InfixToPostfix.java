@@ -90,6 +90,62 @@ public class InfixToPostfix {
         return postfix;
     }
 
+    public Stack<Symbol> convert(ArrayList<Symbol> input) {
+
+        Stack<Symbol> stack = new Stack<>();
+        Stack<Symbol> postfix = new Stack<>();
+
+        // ArrayList<Symbol> input = transformToSymbols(infix);
+        // String test1 = "";
+        // for (Symbol s: input) {
+        //     test1 += String.valueOf(s.c_id);
+        // }
+        // DELETE LATER
+        // System.out.println(test1);
+
+        // Adds concat '.' if the user didn't specify
+        input = concatAdd(input);
+
+        String test = "";
+        for (Symbol s: input) {
+            test += String.valueOf(s.c_id);
+        }
+        // DELETE LATER
+        System.out.println(test);
+
+        // Checks if the letters belong to the alphabet
+        for ( int i = 0; i < input.size(); i++) {
+            Symbol c = input.get(i);
+
+            // if ( Character.isDigit(c.c_id) || Character.isLetter(c.c_id) || c.c_id == 'ε' ) {
+            if ( !c.isOperator() ) {
+                postfix.push(c);
+            } else if (c.c_id == '(' && c.isOperator()) {
+                stack.push(c);
+            } else if (c.c_id == ')' && c.isOperator()) {
+                while (!stack.empty() && stack.peek().c_id != '(') {
+                    postfix.push(stack.pop());
+                }
+                if (!stack.isEmpty() && stack.peek().c_id != '(') {
+                    throw new IllegalArgumentException("Invalid expression");
+                } else {
+                    stack.pop();
+                }
+            } else {
+                while (!stack.empty() && precedence(c.c_id) <= precedence(stack.peek().c_id)) {
+                    postfix.push(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            postfix.push(stack.pop());
+        }
+
+        return postfix;
+    }
+
     /*
      * Checks that all of the characters that are in the regex belong
      * to the Alphabet of the language.  
@@ -142,6 +198,7 @@ public class InfixToPostfix {
     private ArrayList<Symbol> concatAdd(ArrayList<Symbol> input) {
 
         Symbol concat = new Symbol('.');
+        concat.setOperator(true);
 
         ArrayList<Symbol> temp = new ArrayList<>();
 

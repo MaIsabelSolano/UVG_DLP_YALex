@@ -23,13 +23,18 @@ public class Yalex_reader{
 
     public Yalex_reader(String filename) {
         this.file_name = filename;
+
+        LEFTPARAM.setOperator(true);
+        RIGHTPARAM.setOperator(true);
     }
 
-    public void read() {
+    public ArrayList<Symbol> read() {
         fileToInfo();
         separateGroups();
         letsToTokens();
         rulesToRegex();
+
+        return regex;
     }
 
     private void fileToInfo() {
@@ -302,15 +307,13 @@ public class Yalex_reader{
     
         }
 
-        // System.out.println("\n_______Lexemes_______");
-        // for (Token t: tokens) {
-        //     System.out.println(t);
-        // }
-
     }
 
     /** */
     private void rulesToRegex() {
+
+        Symbol or = new Symbol('|');
+        or.setOperator(true);
 
         System.out.println("\n_______Rules_______");
 
@@ -340,7 +343,7 @@ public class Yalex_reader{
                 System.out.println();
 
                 regex.addAll(temp);
-                regex.add(new Symbol('|'));
+                regex.add(or);
 
                 // update and add function
                 if (line_arr.length > 1) {
@@ -362,7 +365,7 @@ public class Yalex_reader{
                 System.out.println("\nProd: " + sym);
                 // Add to regex
                 regex.add(sym);
-                regex.add(new Symbol('|'));
+                regex.add(or);
 
                 // Check for function 
                 if (line_arr.length > 1) {
