@@ -262,6 +262,23 @@ public class SintacticTree {
 
     }
 
+    public void TreePrinter(TreeNode node, String prefix, boolean isLeft) {
+
+        if (node == null) {
+            return;
+        }
+
+        String value = "" + node.value.c_id;
+        if (node.value.c_id == '\t') value = "\\t";
+        if (node.value.c_id == '\n') value = "\\n";
+        System.out.println(prefix + (isLeft ? "|-- " : "\\-- ") + "'"+ value + "'");
+
+        TreePrinter(node.leftChild, prefix + (isLeft ? "|   " : "    "), true);
+
+        TreePrinter(node.righChild, prefix + (isLeft ? "|   " : "    "), false);
+
+    }
+
     /* Getters */
     public TreeNode getRoot() {
         return root;
