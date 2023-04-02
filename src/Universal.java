@@ -7,3 +7,4 @@ public class Universal {
     static ArrayList<Token> tokens = new ArrayList<>();
     
 }
+

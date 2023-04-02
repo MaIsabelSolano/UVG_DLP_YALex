@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Yalex_reader{
 
@@ -126,6 +127,57 @@ public class Yalex_reader{
 
             if (value[0] == '[') {
                 // It's a simple definition
+                // first we remove the 's
+                String value_string = "";
+                for (int c = 0; c < value.length - 1; c++) {
+                    if (value[c] != '[' && value[c] != '[' && value[c] != '\'') {
+                        value_string += value[c];
+                    }
+                }
+
+                System.out.println("\n"+value_string);
+                value = value_string.toCharArray();
+
+                for (int c = 0; c < value.length; c++) {
+                    if (c + 1 >= value.length) {
+                        // End fo list
+                    }
+                    else {
+                        if (value[c + 1] == '-') {
+                            // is a secuence
+                            if (Character.isDigit(value[c]) && Character.isDigit(value[c + 2])) {
+                                for (
+                                    int digit = Character.getNumericValue(value[c]); 
+                                    digit < Character.getNumericValue(value[c+2]) + 1; 
+                                    digit ++ 
+                                ) {
+                                    String lexemeName = Integer.toString(digit);
+                                    Token t = new Token(lexemeName, true);
+                                    currentToken.addValueToken(t);
+                                }
+                                c += 2; // skip the - and the last value
+
+                            } else if (Character.isLetter(value[c]) && Character.isLetter(value[c + 2])) {
+                                int begining = Alphabet.valueOf(""+value[c]).ordinal();
+                                int end = Alphabet.valueOf(""+value[c+2]).ordinal();
+
+                                Alphabet[] subset = Arrays.copyOfRange(
+                                    Alphabet.values(),
+                                    begining,
+                                    end
+                                );
+                                for (Alphabet x: subset) {
+                                    Token t = new Token(x.toString(), true);
+                                    currentToken.addValueToken(t);
+                                }
+                                c += 2; // skip the - and the last value
+
+
+                            }
+                        }
+                    }
+                }
+                
 
             } else {
                 // check for other lexemes in value
@@ -228,4 +280,9 @@ public class Yalex_reader{
         return null;
     }
 
+}
+
+enum Alphabet {
+    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+    a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
 }
