@@ -142,20 +142,9 @@ public class Yalex_reader{
                 String lastFoundLex = "";
                 int foundLatestTokenPos = 0;
 
-                // eliminate []
-                String temp = "";
-                for (char c: value) {
-                    if (c == '[') temp += '(';
-                    else if (c == ']') temp += ')';
-                    else if (c == '\'') {} // ignore
-                    else temp += c;
-                }
-                value = temp.toCharArray();
-
                 while (value.length > 0) {
                     for (int c = 0; c < value.length; c++) {
                         foundLex += value[c];
-
 
                         // Check if lexeme exists
                         if (tokenExist(tokens, foundLex)) {
@@ -166,26 +155,88 @@ public class Yalex_reader{
                     }
                     // check for change
                     if (0 == foundLatestTokenPos) {
-                        // no lexeme was found
-                        String currentChar = "" + value[0];
+                        if (value[0] == '[') {
+                            // it's a normal def inside
 
-                        Token t = new Token(currentChar, true);
+                            // get size of definition
+                            int size = 0;
+                            String inside = "";
+                            boolean counter = true; 
+                            while (counter) {
+                                inside += value[size];
+                                size ++;
+                                if (value[size] == ']') {
+                                    inside += value[size];
+                                    counter = false;
+                                }
+                            }
 
-                        currentToken.addValueToken(t);
+                            char[] inside_char = inside.toCharArray();
 
-                        // Copy value to array
-                        String value_temp = "";
-                        for (char val_c: value) value_temp += val_c;
+                            // overwrite current token 
+                            currentToken.addValueToken(new Token("(", true));
+                            currentToken = simpleDef(currentToken, inside_char, or);
+                            currentToken.addValueToken(new Token(")", true));
 
-                        // remove the newest found lexeme from value
-                        value_temp = value_temp.substring(foundLatestTokenPos+1);
+                            // Copy value to array
+                            String value_temp = "";
+                            for (char val_c: value) value_temp += val_c;
 
-                        // return to value
-                        value = value_temp.toCharArray();
+                            // remove the newest found lexeme from value
+                            value_temp = value_temp.substring(size + 1);
 
-                        foundLatestTokenPos = 0;
-                        lastFoundLex = "";
-                        foundLex = "";
+                            // return to value
+                            value = value_temp.toCharArray();
+
+                            foundLatestTokenPos = 0;
+                            lastFoundLex = "";
+                            foundLex = "";
+
+                        } else if (value[0] == '\'') {
+                            // it's an implicit definition
+                            String currentChar = "" + value[1];
+                            
+                            Token t = new Token(currentChar, true);
+
+                            currentToken.addValueToken(t);
+
+                            // Copy value to array
+                            String value_temp = "";
+                            for (char val_c: value) value_temp += val_c;
+
+                            // remove the newest found lexeme from value
+                            value_temp = value_temp.substring(foundLatestTokenPos+3);
+
+                            // return to value
+                            value = value_temp.toCharArray();
+
+                            foundLatestTokenPos = 0;
+                            lastFoundLex = "";
+                            foundLex = "";
+                        }
+                        else {
+                            // no lexeme was found
+                            String currentChar = "" + value[0];
+                            
+                            Token t = new Token(currentChar, true);
+
+                            currentToken.addValueToken(t);
+
+                            // Copy value to array
+                            String value_temp = "";
+                            for (char val_c: value) value_temp += val_c;
+
+                            // remove the newest found lexeme from value
+                            value_temp = value_temp.substring(foundLatestTokenPos+1);
+
+                            // return to value
+                            value = value_temp.toCharArray();
+
+                            foundLatestTokenPos = 0;
+                            lastFoundLex = "";
+                            foundLex = "";
+                        }
+                        
 
                     } else if (!lastFoundLex.equals("")) {
                         // A lexeme was found
