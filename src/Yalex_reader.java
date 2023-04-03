@@ -133,103 +133,7 @@ public class Yalex_reader{
             if (value[0] == '[') {
                 // It's a simple definition
                 // first we remove the 's
-                String value_string = "";
-                for (int c = 0; c < value.length - 1; c++) {
-                    if ( value[c] != '[' && value[c] != '\'' && value[c] != '\"' ) {
-                        value_string += value[c];
-                    }
-                }
-                value = value_string.toCharArray();
-
-                for (int c = 0; c < value.length; c++) {
-                    if (c + 1 >= value.length) {
-                        // End fo list
-                        Token t = new Token(""+value[c], true);
-                        currentToken.addValueToken(t);
-                    }
-                    else {
-                        if (value[c + 1] == '-') {
-                            // is a secuence
-                            if (Character.isDigit(value[c]) && Character.isDigit(value[c + 2])) {
-                                for (
-                                    int digit = Character.getNumericValue(value[c]); 
-                                    digit < Character.getNumericValue(value[c+2]) + 1; 
-                                    digit ++ 
-                                ) {
-                                    String lexemeName = Integer.toString(digit);
-                                    Token t = new Token(lexemeName, true);
-                                    currentToken.addValueToken(t);
-
-                                    // check if is not the last | to not include it
-                                    currentToken.addValueToken(or);
-                                }
-                                c += 2; // skip the - and the last value
-
-                            } else if (Character.isLetter(value[c]) && Character.isLetter(value[c + 2])) {
-                                int begining = Alphabet.valueOf(""+value[c]).ordinal();
-                                int end = Alphabet.valueOf(""+value[c+2]).ordinal() + 1;
-
-                                Alphabet[] subset = Arrays.copyOfRange(
-                                    Alphabet.values(),
-                                    begining,
-                                    end
-                                );
-                                for (Alphabet x: subset) {
-                                    Token t = new Token(x.toString(), true);
-                                    currentToken.addValueToken(t);
-
-                                    // check if is not the last | to not include it
-                                    currentToken.addValueToken(or);
-                                }
-                                c += 2; // skip the - and the last value
-
-
-                            }
-                        } else if (value[c] == '\\') {
-                            if (value[c + 1] == 't') {
-                                String lexemeName = "\t";
-                                Token t = new Token(lexemeName, true);
-                                currentToken.addValueToken(t);
-
-                                // check if is not the last | to not include it
-                                if (c + 2 < value.length) currentToken.addValueToken(or);
-
-                                c += 1;
-
-                            } else if (value[c + 1] == 'n') {
-                                String lexemeName = "\n";
-                                Token t = new Token(lexemeName, true);
-                                currentToken.addValueToken(t);
-
-                                // check if is not the last | to not include it
-                                if (c + 2 < value.length) currentToken.addValueToken(or);
-
-                                c += 1;
-
-                            } else if (value[c + 1] == 's') {
-                                String lexemeName = " ";
-                                Token t = new Token(lexemeName, true);
-                                currentToken.addValueToken(t);
-
-                                // check if is not the last | to not include it
-                                if (c + 2 < value.length) currentToken.addValueToken(or);
-
-                                c += 1;
-                            }
-
-                        } else {
-                            Token t = new Token(""+value[c], true);
-                            currentToken.addValueToken(t);
-
-                            // check if is not the last | to not include it
-                            if (c + 1 < value.length) currentToken.addValueToken(or);
-                            
-                        }
-                    }
-                }
-
-                // Delete the last or
-                currentToken.deleteLastOr();
+                currentToken = simpleDef(currentToken, value, or);
                 
 
             } else {
@@ -468,6 +372,111 @@ public class Yalex_reader{
         }
         return s;
         
+    }
+
+    private Token simpleDef(Token currentToken, char[] value, Token or) {
+        String value_string = "";
+        for (int c = 0; c < value.length; c++) {
+            if ( 
+                value[c] != '[' && value[c] != '\''
+                && value[c] != '\"' && value[c] != ']' 
+            ) {
+                value_string += value[c];
+            }
+        }
+        value = value_string.toCharArray();
+
+        for (int c = 0; c < value.length; c++) {
+            if (c + 1 >= value.length) {
+                // End fo list
+                Token t = new Token(""+value[c], true);
+                currentToken.addValueToken(t);
+            }
+            else {
+                if (value[c + 1] == '-') {
+                    // is a secuence
+                    if (Character.isDigit(value[c]) && Character.isDigit(value[c + 2])) {
+                        for (
+                            int digit = Character.getNumericValue(value[c]); 
+                            digit < Character.getNumericValue(value[c+2]) + 1; 
+                            digit ++ 
+                        ) {
+                            String lexemeName = Integer.toString(digit);
+                            Token t = new Token(lexemeName, true);
+                            currentToken.addValueToken(t);
+
+                            // check if is not the last | to not include it
+                            currentToken.addValueToken(or);
+                        }
+                        c += 2; // skip the - and the last value
+
+                    } else if (Character.isLetter(value[c]) && Character.isLetter(value[c + 2])) {
+                        int begining = Alphabet.valueOf(""+value[c]).ordinal();
+                        int end = Alphabet.valueOf(""+value[c+2]).ordinal() + 1;
+
+                        Alphabet[] subset = Arrays.copyOfRange(
+                            Alphabet.values(),
+                            begining,
+                            end
+                        );
+                        for (Alphabet x: subset) {
+                            Token t = new Token(x.toString(), true);
+                            currentToken.addValueToken(t);
+
+                            // check if is not the last | to not include it
+                            currentToken.addValueToken(or);
+                        }
+                        c += 2; // skip the - and the last value
+
+
+                    }
+                } else if (value[c] == '\\') {
+                    if (value[c + 1] == 't') {
+                        String lexemeName = "\t";
+                        Token t = new Token(lexemeName, true);
+                        currentToken.addValueToken(t);
+
+                        // check if is not the last | to not include it
+                        if (c + 2 < value.length) currentToken.addValueToken(or);
+
+                        c += 1;
+
+                    } else if (value[c + 1] == 'n') {
+                        String lexemeName = "\n";
+                        Token t = new Token(lexemeName, true);
+                        currentToken.addValueToken(t);
+
+                        // check if is not the last | to not include it
+                        if (c + 2 < value.length) currentToken.addValueToken(or);
+
+                        c += 1;
+
+                    } else if (value[c + 1] == 's') {
+                        String lexemeName = " ";
+                        Token t = new Token(lexemeName, true);
+                        currentToken.addValueToken(t);
+
+                        // check if is not the last | to not include it
+                        if (c + 2 < value.length) currentToken.addValueToken(or);
+
+                        c += 1;
+                    }
+
+                } else {
+                    Token t = new Token(""+value[c], true);
+                    currentToken.addValueToken(t);
+
+                    // check if is not the last | to not include it
+                    if (c + 1 < value.length) currentToken.addValueToken(or);
+                    
+                }
+            }
+        }
+
+        // Delete the last or
+        currentToken.deleteLastOr();
+
+        return currentToken;
     }
 
 }

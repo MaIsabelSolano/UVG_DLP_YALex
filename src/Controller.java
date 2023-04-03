@@ -12,7 +12,7 @@ public class Controller {
         GraphToFile gtf = new GraphToFile();
         TerminalCommand tc = new TerminalCommand();
 
-        Yalex_reader yr = new Yalex_reader("input/slr-1.yal");
+        Yalex_reader yr = new Yalex_reader("input/slr-3.yal");
         ArrayList<Symbol> regex = yr.read();
         
         System.out.println("\n______Concat_______");
@@ -39,6 +39,11 @@ public class Controller {
         for (Symbol s: postfix) {
             test += String.valueOf(s.c_id);
         }
+
+        for (Symbol s: postfix) {
+            System.out.println(s.c_id + " is operator " + (s.isOperator() ? "yes" : " no"));
+        }
+
         System.out.println("\n______Regex Postfix_______");
         System.out.println(test);
 
