@@ -55,18 +55,6 @@ public class Controller {
         gtf.generateFile(graphTxtFileName, automata);
         tc.GraphAFN(graphTxtFileName, graphJpgFileName);
 
-        // AFD minimization
-        AFD_minimizer afdMin = new AFD_minimizer();
-        AFD afd_minimized = afdMin.minimize(automata);
-        System.out.println("\n*** Minimized DFA (NFA to DFA) ***");
-        System.out.println(afd_minimized);
-
-        // AFD_trans minimized graph
-        graphTxtFileName = "output/AFD_min.txt";
-        graphJpgFileName = "output/AFD_min.jpg";
-        gtf.generateFile(graphTxtFileName, afd_minimized);
-        tc.GraphAFN(graphTxtFileName, graphJpgFileName);
-
     }
 
 }

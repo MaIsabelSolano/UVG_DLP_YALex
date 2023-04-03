@@ -65,7 +65,10 @@ public class GraphToFile {
                 if (t.getSymbol().c_id == ')') label = "RPAREN";
                 if (t.getSymbol().c_id == '*') label = "TIMES";
                 if (t.getSymbol().c_id == '+') label = "PLUS";
-
+                if (t.getSymbol().c_id == '-') label = "MINUS";
+                if (t.getSymbol().c_id == '/') label = "DIV";
+                if (t.getSymbol().c_id == '.') label = "DOT";
+                
                 writer.write(
                     "\n\t" +
                     t.getOriginState().toString() +
@@ -128,6 +131,9 @@ public class GraphToFile {
                 if (t.getSymbol().c_id == ')') label = "RPAREN";
                 if (t.getSymbol().c_id == '*') label = "TIMES";
                 if (t.getSymbol().c_id == '+') label = "PLUS";
+                if (t.getSymbol().c_id == '-') label = "MINUS";
+                if (t.getSymbol().c_id == '/') label = "DIV";
+                if (t.getSymbol().c_id == '.') label = "DOT";
 
                 writer.write(
                     "\n\t" +

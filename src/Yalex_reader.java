@@ -135,7 +135,7 @@ public class Yalex_reader{
                 // first we remove the 's
                 String value_string = "";
                 for (int c = 0; c < value.length - 1; c++) {
-                    if (value[c] != '[' && value[c] != '[' && value[c] != '\'') {
+                    if ( value[c] != '[' && value[c] != '\'' && value[c] != '\"' ) {
                         value_string += value[c];
                     }
                 }
@@ -237,8 +237,17 @@ public class Yalex_reader{
                 String foundLex = "";
                 String lastFoundLex = "";
                 int foundLatestTokenPos = 0;
-                // char[] value_copy = new char[value.length];
-                // System.arraycopy(value, 0, value_copy, 0, value.length);
+
+                // eliminate []
+                String temp = "";
+                for (char c: value) {
+                    if (c == '[') temp += '(';
+                    else if (c == ']') temp += ')';
+                    else if (c == '\'') {} // ignore
+                    else temp += c;
+                }
+                value = temp.toCharArray();
+
                 while (value.length > 0) {
                     for (int c = 0; c < value.length; c++) {
                         foundLex += value[c];
