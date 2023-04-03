@@ -1,3 +1,13 @@
+/*
+ * @author: Ma. Isabel Solano
+ * @version 3, 03/04/23
+ * 
+ * Class in charged o freading a .yal file and analyze
+ * its content, generating tokens, the regular expression
+ * the grammar dictates as a ArrayList of Symbols
+ * 
+ */
+
 package src;
 
 import java.io.BufferedReader;
@@ -28,6 +38,12 @@ public class Yalex_reader{
         RIGHTPARAM.setOperator(true);
     }
 
+    /**
+     * Main method that is in charge of calling all the 
+     * other methods that process the file. 
+     * 
+     * @return ArrayList of Symbols containing the basic regex
+     */
     public ArrayList<Symbol> read() {
         fileToInfo();
         separateGroups();
@@ -37,6 +53,12 @@ public class Yalex_reader{
         return regex;
     }
 
+    /**
+     * First step to convert file to regex. This method browses 
+     * through all ot the file storing the information inside the
+     * ArrayList of strings 'info'. While doing so it delets 
+     * comments and blank spaces
+     */
     private void fileToInfo() {
         try {
             reader = new BufferedReader(new FileReader(file_name));
@@ -91,6 +113,13 @@ public class Yalex_reader{
         }
     }
 
+    /**
+     * Second step to convert .yal into a regular expression.
+     * With the Array of information, it detects whether its a
+     * formal definition of the grammar or if it's the main regular
+     * expression found in rules. The first part is storesd in an
+     * ArrayList clled 'lets' and the second part in 'rules'
+     */
     private void separateGroups() {
         int pos = 0;
         for (int i = 0; i < info.size(); i++) {
@@ -112,6 +141,16 @@ public class Yalex_reader{
 
     }
 
+    /**
+     * Thirt step to convert Grammar into regular expression. 
+     * Having the ArrayList 'lets' definded in the last step,
+     * letsToTokens browses through that information recognizing
+     * the name of the token and its value, that could either
+     * be defined my another token, or by a list or range. 
+     * 
+     * All the informtion is getting stored in a Token
+     * ArrayList called 'tokens' 
+     */
     private void letsToTokens() {
         for (int i = 0; i < lets.size(); i++) {
             String[] line = lets.get(i).split(" ", 4);
@@ -147,7 +186,7 @@ public class Yalex_reader{
                         foundLex += value[c];
 
                         // Check if lexeme exists
-                        if (tokenExist(tokens, foundLex)) {
+                        if (tokenExist(foundLex)) {
 
                             foundLatestTokenPos = c;
                             lastFoundLex = new String(foundLex);
@@ -240,7 +279,7 @@ public class Yalex_reader{
 
                     } else if (!lastFoundLex.equals("")) {
                         // A lexeme was found
-                        Token t = getToken(tokens, lastFoundLex);
+                        Token t = getToken(lastFoundLex);
 
                         // Add the new token to the curren token's value
                         currentToken.addValueToken(new Token("(", true));
@@ -273,7 +312,16 @@ public class Yalex_reader{
 
     }
 
-    /** */
+    /**
+     * Fourth and last step to transform grammar into regex. 
+     * Having done all of the previous steps, and most of the
+     * tokens defined. This method browses through the String
+     * ArrayList 'rules' to find the base of the regex. It used
+     * the other method 'Production' to find the end points of
+     * each production. 
+     * This method also adds other tokens that may not have
+     * been described earlier and stores their defining function. 
+    */
     private void rulesToRegex() {
 
         Symbol or = new Symbol('|');
@@ -295,9 +343,9 @@ public class Yalex_reader{
             // line_arr[1]: function (optional)
             
             // determine whether or not the token exists or not
-            if (tokenExist(tokens, line_arr[0])) {
+            if (tokenExist(line_arr[0])) {
                 // token is already in the token arraylist
-                Token currentToken = getToken(tokens, line_arr[0]);
+                Token currentToken = getToken(line_arr[0]);
                 
                 ArrayList<Symbol> temp = new ArrayList<>();
                 temp.add(LEFTPARAM);
@@ -322,15 +370,7 @@ public class Yalex_reader{
 
             } else {
                 // token needs to be added
-
                 Token currentToken = new Token(line_arr[0], true);
-
-                // // special tokens
-                // if (line_arr.length > 1) {
-                //     if ((line_arr[0] + line_arr[1]).equals(":=")) {
-                        
-                //     }
-                // }
 
                 Symbol sym = new Symbol(line_arr[0].charAt(0));
                 
@@ -345,9 +385,7 @@ public class Yalex_reader{
                 }
                 // Add to tokens
                 tokens.add(currentToken);
-            }
-
-            
+            }   
         }
 
         // removing the last or
@@ -359,26 +397,17 @@ public class Yalex_reader{
         for (Token t: tokens) {
             System.out.println(t);
         }
-
-        System.out.println("\n_______Regex_______");
-        System.out.println();
-        for (Symbol s: regex) {
-            System.out.print(s);
-        }
-        System.out.println();
-
-        
-
     }
 
     /**
+     * Internal method to determine whether the ArrayList 'tokens'
+     * has stored a token with a given name
      * 
-     * @param toks
-     * @param lex
-     * @return
+     * @param lex   Name of the token 
+     * @return      True if it contains it, false if not
      */
-    private boolean tokenExist(ArrayList<Token> toks, String lex) {
-        for (Token t: toks) {
+    private boolean tokenExist(String lex) {
+        for (Token t: tokens) {
             if (t.getLexeme().equals(lex)) return true;
         }
 
@@ -386,13 +415,13 @@ public class Yalex_reader{
     }
 
     /**
+     * Internall method to return the a token given its name.
      * 
-     * @param toks
-     * @param lex
-     * @return
+     * @param lex   Name of the token
+     * @return      Token 
      */
-    private Token getToken(ArrayList<Token> toks, String lex)  {
-        for (Token t: toks) {
+    private Token getToken(String lex)  {
+        for (Token t: tokens) {
             if (t.getLexeme().equals(lex)) return t;
         }
 
@@ -400,11 +429,14 @@ public class Yalex_reader{
     }
 
     /**
-     * Syntactic Analysis by Recursive dowfall
+     * Recusive Decending Parsing function. Given a token, it
+     * browses through its productions and returns the corresponding
+     * symbols to create the regex. 
      * 
-     * @param current_t
-     * @param s
-     * @return
+     * @param current_t Token to check
+     * @param s         The symbols it has stored so far
+     * @return          An ArrayList of symbols corresponding to the 
+     *                  production. 
      */
     public ArrayList<Symbol> Production(Token current_t, ArrayList<Symbol> s) {
 
@@ -448,8 +480,18 @@ public class Yalex_reader{
         
     }
 
+    /**
+     * Internal method to deal with productions that are lists or 
+     * ranges definde inside []. It recognizes whether the 
+     * definition is a simple character definition, a range of values
+     * or a special value
+     * 
+     * @param currentToken  Current token to store the tokens to
+     * @param value         Char array with the tokens to add
+     * @param or            Token to add after each token is added
+     * @return              The currentToken with it's new definition 
+     */
     private Token simpleDef(Token currentToken, char[] value, Token or) {
-        System.out.println("_____SimpleDef_____");
         String value_string = "";
         for (int c = 0; c < value.length; c++) {
             if ( value[c] != '[' && value[c] != ']' ) {
@@ -457,11 +499,10 @@ public class Yalex_reader{
 
             } 
         }
-        System.out.println("value_string : " + value_string);
         value = value_string.toCharArray();
 
         for (int c = 0; c < value.length; c++) {
-            System.out.println("value: "+ value[c]);
+            // System.out.println("value: "+ value[c]);
 
             if (value[c] == '\'') {
                 
@@ -481,7 +522,7 @@ public class Yalex_reader{
 
                     if (value[c + 3] == '-') {
                         // it's a range
-                        System.out.println(value[c] + value[c+1] + value[c+2] + value[c+3] + value[c+4] + value[c+5]);
+                        // System.out.println(value[c] + value[c+1] + value[c+2] + value[c+3] + value[c+4] + value[c+5]);
                         if (Character.isDigit(value[c + 1])) {
                             // it's a numeric sequence
 
@@ -632,7 +673,6 @@ public class Yalex_reader{
                 currentToken.addValueToken(or);
 
             }
-
         }
 
         // Delete the last or

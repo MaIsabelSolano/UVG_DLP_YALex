@@ -34,7 +34,6 @@ digraph AFN
 	0 -> 4 [label=0];
 	0 -> 4 [label=1];
 	0 -> 4 [label=2];
-	0 -> 4 [label=3];
 	0 -> 3 [label=ASSIGNOP];
 	0 -> 3 [label=SEMICOLON];
 	0 -> 3 [label=LT];
@@ -44,30 +43,24 @@ digraph AFN
 	4 -> 4 [label=0];
 	4 -> 4 [label=1];
 	4 -> 4 [label=2];
-	4 -> 4 [label=3];
 	6 -> 7 [label=0];
 	6 -> 7 [label=1];
 	6 -> 7 [label=2];
-	6 -> 7 [label=3];
 	7 -> 5 [label=E];
 	7 -> 7 [label=0];
 	7 -> 7 [label=1];
 	7 -> 7 [label=2];
-	7 -> 7 [label=3];
 	5 -> 8 [label=PLUS];
 	5 -> 8 [label=MINUS];
 	5 -> 9 [label=0];
 	5 -> 9 [label=1];
 	5 -> 9 [label=2];
-	5 -> 9 [label=3];
 	9 -> 9 [label=0];
 	9 -> 9 [label=1];
 	9 -> 9 [label=2];
-	9 -> 9 [label=3];
 	8 -> 9 [label=0];
 	8 -> 9 [label=1];
 	8 -> 9 [label=2];
-	8 -> 9 [label=3];
 	2 -> 2 [label=tab];
 	2 -> 2 [label=eol];
 	2 -> 2 [label=space];
@@ -81,7 +74,6 @@ digraph AFN
 	1 -> 1 [label=0];
 	1 -> 1 [label=1];
 	1 -> 1 [label=2];
-	1 -> 1 [label=3];
 	10 -> 1 [label=A];
 	10 -> 1 [label=B];
 	10 -> 1 [label=C];
@@ -92,5 +84,4 @@ digraph AFN
 	10 -> 1 [label=0];
 	10 -> 1 [label=1];
 	10 -> 1 [label=2];
-	10 -> 1 [label=3];
 }

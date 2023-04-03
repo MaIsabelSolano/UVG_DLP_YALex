@@ -1,6 +1,6 @@
 /*
  * @author: Ma. Isabel Solano
- * @version 3, 02/04/23
+ * @version 3, 03/04/23
  * 
  * Symbol class that stores the char and int value of each symbol
  * 

@@ -28,7 +28,7 @@ public class InfixToPostfix {
     }
 
     
-    /*
+    /**
      * Convert is the method that is called to do all the work. 
      * 
      * @params String           The input string that contains the regex
@@ -143,7 +143,7 @@ public class InfixToPostfix {
         return postfix;
     }
 
-    /*
+    /**
      * Checks that all of the characters that are in the regex belong
      * to the Alphabet of the language.  
      * 
@@ -200,7 +200,7 @@ public class InfixToPostfix {
 
     }
 
-    /*
+    /**
      * If the user doesn't include a concat, the program adds it so that
      * way is easier to work with the reagular expression. 
      * 
@@ -260,31 +260,7 @@ public class InfixToPostfix {
         return temp;
     }
 
-    // /*
-    //  * Method to determine if the current symbols is an 
-    //  * operator or not
-    //  * 
-    //  * @warning This method may be deprecated in the near future
-    //  * 
-    //  * @param Symbols s     The current symbol
-    //  * @return boolean res  True of false wheather the symbols is an 
-    //  *                      operator or not
-    //  */
-    // private boolean isOperator(Symbol s) {
-    //     boolean res = false;
-
-    //     if (s.c_id == '?' || s.c_id == '.' || 
-    //         s.c_id == '+' || s.c_id == '*' ||
-    //         s.c_id == '(' || s.c_id == ')' ||
-    //         s.c_id == '|' ) {
-                
-    //             res = true;
-    //         }
-
-    //     return res;
-    // }
-
-    /*
+    /**
      * Method to determine the precedence of an operator
      * 
      * @param char operator The current operator

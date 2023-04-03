@@ -1,3 +1,11 @@
+/*
+ * @author: Ma. Isabel Solano
+ * @version 2, 03/04/2023
+ * 
+ * Class to define a token
+ * 
+ */
+
 package src;
 
 import java.util.ArrayList;
@@ -10,17 +18,34 @@ public class Token {
     private boolean terminal;
     private boolean isOperator = false;
 
+    /**
+     * Simple constructor
+     * 
+     * @param lexeme    Name of the lexeme
+     * @param terminal  If it's a terminal token or not
+     */
+    public Token(String lexeme, Boolean terminal) {
+        this.lexeme = lexeme;
+        this.terminal = terminal;
+    }
+
+    /**
+     * Simple constructor that includes the value
+     * 
+     * @param lexeme    Name of lexeme
+     * @param value     Value of lexeme
+     * @param terminal  If it's a terminal token or not
+     */
     public Token(String lexeme, ArrayList<Token> value, boolean terminal) {
         this.lexeme = lexeme;
         this.value = value;
         this.terminal = terminal;
     }
 
-    public Token(String lexeme, Boolean terminal) {
-        this.lexeme = lexeme;
-        this.terminal = terminal;
-    }
-
+    /**
+     * If the last toiken in the production is an or,
+     * delet it
+     */
     public void deleteLastOr() {
         if (value.get(value.size()-1).lexeme.equals("|")) {
             value.remove(value.size()-1);

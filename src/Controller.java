@@ -1,3 +1,10 @@
+/*
+ * @author: Ma. Isabel Solano
+ * @version 3, 03/04/23
+ * 
+ * Main class
+ */
+
 package src;
 
 import java.util.ArrayList;
@@ -15,10 +22,18 @@ public class Controller {
         Yalex_reader yr = new Yalex_reader("input/slr-4.yal");
         ArrayList<Symbol> regex = yr.read();
 
-        System.out.println("\n___Is operator per symbol___");
+        System.out.println("\n_______Regex_______");
+        System.out.println();
         for (Symbol s: regex) {
-            System.out.println(s.c_id + " is operator " + (s.isOperator() ? "yes" : " no"));
+            System.out.print(s);
         }
+        System.out.println();
+
+
+        // System.out.println("\n___Is operator per symbol___");
+        // for (Symbol s: regex) {
+        //     System.out.println(s.c_id + " is operator " + (s.isOperator() ? "yes" : " no"));
+        // }
         
         System.out.println("\n______Concat_______");
         
@@ -45,17 +60,17 @@ public class Controller {
             test += String.valueOf(s.c_id);
         }
 
-        System.out.println("\n___Is operator per symbol___");
-        for (Symbol s: postfix) {
-            System.out.println(s.c_id + " is operator " + (s.isOperator() ? "yes" : " no"));
-        }
+        // System.out.println("\n___Is operator per symbol___");
+        // for (Symbol s: postfix) {
+        //     System.out.println(s.c_id + " is operator " + (s.isOperator() ? "yes" : " no"));
+        // }
 
         System.out.println("\n______Regex Postfix_______");
         System.out.println(test);
 
         System.out.println("\nSyntactic Tree");
         SintacticTree sintacticTree = new SintacticTree(postfix);
-        sintacticTree.printTree(sintacticTree.getRoot());
+        //sintacticTree.printTree(sintacticTree.getRoot());
         sintacticTree.TreePrinter(sintacticTree.getRoot(), "", true);
         AFD automata = new AFD(alphabet, sintacticTree);
         System.out.println(automata);

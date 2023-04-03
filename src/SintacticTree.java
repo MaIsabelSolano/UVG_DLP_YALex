@@ -1,6 +1,6 @@
 /*
  * @author: Ma. Isabel Solano
- * @version 2, 19/03/23
+ * @version 3, 03/04/23
  * 
  * Syntactic Tree for DFA direct construction.
  * 
@@ -265,6 +265,15 @@ public class SintacticTree {
 
     }
 
+    /**
+     * New version of tree printing. Prints just the name
+     * of the nodes and shows it's children creating a 
+     * tree-like structure 
+     * 
+     * @param node      Current node
+     * @param prefix    Tree structure
+     * @param isLeft    If it's a left or right child
+     */
     public void TreePrinter(TreeNode node, String prefix, boolean isLeft) {
 
         if (node == null) {
