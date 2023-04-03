@@ -12,8 +12,13 @@ public class Controller {
         GraphToFile gtf = new GraphToFile();
         TerminalCommand tc = new TerminalCommand();
 
-        Yalex_reader yr = new Yalex_reader("input/slr-1.yal");
+        Yalex_reader yr = new Yalex_reader("input/slr-4.yal");
         ArrayList<Symbol> regex = yr.read();
+
+        System.out.println("\n___Is operator per symbol___");
+        for (Symbol s: regex) {
+            System.out.println(s.c_id + " is operator " + (s.isOperator() ? "yes" : " no"));
+        }
         
         System.out.println("\n______Concat_______");
         
@@ -50,7 +55,7 @@ public class Controller {
 
         System.out.println("\nSyntactic Tree");
         SintacticTree sintacticTree = new SintacticTree(postfix);
-        //sintacticTree.printTree(sintacticTree.getRoot());
+        sintacticTree.printTree(sintacticTree.getRoot());
         sintacticTree.TreePrinter(sintacticTree.getRoot(), "", true);
         AFD automata = new AFD(alphabet, sintacticTree);
         System.out.println(automata);

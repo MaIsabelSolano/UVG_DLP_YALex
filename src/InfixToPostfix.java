@@ -165,7 +165,7 @@ public class InfixToPostfix {
                 input.add(temp);
             } else {
                 // Not already part of the dictionary
-                if (isOperator(temp)) {
+                if (temp.isOperator()) {
                     // Adds to the array
                     input.add(temp);
                 }
@@ -225,10 +225,10 @@ public class InfixToPostfix {
         int bias = 1;  
         for (int i = 0; i < input.size() - 1 ; i ++) {
             // if it is an operator
-            if ( isOperator(input.get(i)))  {
+            if ( input.get(i).isOperator())  {
                 if ( input.get(i).c_id == '*' || input.get(i).c_id == '+' ||
                      input.get(i).c_id == ')' || input.get(i).c_id == '?') {
-                    if ( !isOperator(input.get(i + 1)) || 
+                    if ( !input.get(i + 1).isOperator() || 
                          input.get(i + 1).c_id == '('
                         ) {
 
@@ -239,8 +239,8 @@ public class InfixToPostfix {
                 }
 
             // if it is a normal symbol
-            } else if ( !isOperator(input.get(i))) {
-                if ( !isOperator(input.get(i + 1))) {
+            } else if ( !input.get(i).isOperator()) {
+                if ( !input.get(i + 1).isOperator()) {
 
                     temp.add(i + bias, concat);
                     bias ++;
@@ -260,29 +260,29 @@ public class InfixToPostfix {
         return temp;
     }
 
-    /*
-     * Method to determine if the current symbols is an 
-     * operator or not
-     * 
-     * @warning This method may be deprecated in the near future
-     * 
-     * @param Symbols s     The current symbol
-     * @return boolean res  True of false wheather the symbols is an 
-     *                      operator or not
-     */
-    private boolean isOperator(Symbol s) {
-        boolean res = false;
+    // /*
+    //  * Method to determine if the current symbols is an 
+    //  * operator or not
+    //  * 
+    //  * @warning This method may be deprecated in the near future
+    //  * 
+    //  * @param Symbols s     The current symbol
+    //  * @return boolean res  True of false wheather the symbols is an 
+    //  *                      operator or not
+    //  */
+    // private boolean isOperator(Symbol s) {
+    //     boolean res = false;
 
-        if (s.c_id == '?' || s.c_id == '.' || 
-            s.c_id == '+' || s.c_id == '*' ||
-            s.c_id == '(' || s.c_id == ')' ||
-            s.c_id == '|' ) {
+    //     if (s.c_id == '?' || s.c_id == '.' || 
+    //         s.c_id == '+' || s.c_id == '*' ||
+    //         s.c_id == '(' || s.c_id == ')' ||
+    //         s.c_id == '|' ) {
                 
-                res = true;
-            }
+    //             res = true;
+    //         }
 
-        return res;
-    }
+    //     return res;
+    // }
 
     /*
      * Method to determine the precedence of an operator
