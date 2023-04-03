@@ -56,14 +56,17 @@ public class GraphToFile {
 
             // -Transitions
             for (Transition t: afn.getTransitions()) {
+                String label = ""+t.getSymbol().c_id;
+                if (t.getSymbol().c_id == '\n') label = "eof";
+                if (t.getSymbol().c_id == '\t') label = "tab";
+                if (t.getSymbol().c_id == ' ') label = "space";
+
                 writer.write(
                     "\n\t" +
                     t.getOriginState().toString() +
                     " -> " +
                     t.getFinalState().toString() +
-                    " [label=" +
-                    t.getSymbol().c_id +
-                    "];"
+                    " [label=" + label + "];"
                 );
             }
 
@@ -111,14 +114,17 @@ public class GraphToFile {
 
             // -Transitions
             for (Transition t: afd.getTransitions()) {
+                String label = ""+t.getSymbol().c_id;
+                if (t.getSymbol().c_id == '\n') label = "eof";
+                if (t.getSymbol().c_id == '\t') label = "tab";
+                if (t.getSymbol().c_id == ' ') label = "space";
+
                 writer.write(
                     "\n\t" +
                     t.getOriginState().toString() +
                     " -> " +
                     t.getFinalState().toString() +
-                    " [label=" +
-                    t.getSymbol().c_id +
-                    "];"
+                    " [label=" + label + "];"
                 );
             }
 

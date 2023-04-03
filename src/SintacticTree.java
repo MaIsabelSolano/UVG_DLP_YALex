@@ -196,7 +196,7 @@ public class SintacticTree {
         genFollowPos(node.leftChild);
         genFollowPos(node.righChild);
         
-        if (node.value.c_id == '.') {
+        if (node.value.c_id == '.' && node.value.isOperator()) {
             // concat
             for (int pos: node.leftChild.getLastpos()) {
                 for (int posAdd: node.righChild.getFirstpos()) {
@@ -204,7 +204,10 @@ public class SintacticTree {
                 }
             }
 
-        } else if (node.value.c_id == '*' || node.value.c_id == '+') {
+        } else if (
+            (node.value.c_id == '*' && node.value.isOperator())|| 
+            (node.value.c_id == '+' && node.value.isOperator())
+        ) {
             for (int pos: node.getLastpos()) {
                 for (int posAdd: node.getFirstpos()) {
                     // Adds all of its first post to the last pos

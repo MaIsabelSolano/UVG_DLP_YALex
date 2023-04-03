@@ -9,6 +9,8 @@ public class Controller {
 
         // instances
         InfixToPostfix itp = new InfixToPostfix();
+        GraphToFile gtf = new GraphToFile();
+        TerminalCommand tc = new TerminalCommand();
 
         Yalex_reader yr = new Yalex_reader("input/slr-1.yal");
         ArrayList<Symbol> regex = yr.read();
@@ -26,6 +28,13 @@ public class Controller {
         postfix.add(end);
         postfix.add(concat);
 
+        String alph = "";
+        for (Symbol s: alphabet.values()) {
+            alph += String.valueOf(s.c_id);
+        }
+        System.out.println("\n______Alphabet_______");
+        System.out.println(alph);
+
         String test = "";
         for (Symbol s: postfix) {
             test += String.valueOf(s.c_id);
@@ -35,10 +44,16 @@ public class Controller {
 
         System.out.println("\nSyntactic Tree");
         SintacticTree sintacticTree = new SintacticTree(postfix);
-        // sintacticTree.printTree(sintacticTree.getRoot());
+        sintacticTree.printTree(sintacticTree.getRoot());
         sintacticTree.TreePrinter(sintacticTree.getRoot(), "", true);
         AFD automata = new AFD(alphabet, sintacticTree);
         System.out.println(automata);
+
+        // AFD_direct graph
+        String graphTxtFileName = "output/AFD_direct.txt";
+        String graphJpgFileName = "output/AFD_direct.jpg";
+        gtf.generateFile(graphTxtFileName, automata);
+        tc.GraphAFN(graphTxtFileName, graphJpgFileName);
 
     }
 

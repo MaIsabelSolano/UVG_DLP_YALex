@@ -95,14 +95,6 @@ public class InfixToPostfix {
         Stack<Symbol> stack = new Stack<>();
         Stack<Symbol> postfix = new Stack<>();
 
-        // ArrayList<Symbol> input = transformToSymbols(infix);
-        // String test1 = "";
-        // for (Symbol s: input) {
-        //     test1 += String.valueOf(s.c_id);
-        // }
-        // DELETE LATER
-        // System.out.println(test1);
-
         // Adds concat '.' if the user didn't specify
         input = concatAdd(input);
 
@@ -114,6 +106,8 @@ public class InfixToPostfix {
         System.out.println(test);
 
         // Checks if the letters belong to the alphabet
+        
+        // algorithm
         for ( int i = 0; i < input.size(); i++) {
             Symbol c = input.get(i);
 
@@ -142,6 +136,9 @@ public class InfixToPostfix {
         while (!stack.isEmpty()) {
             postfix.push(stack.pop());
         }
+
+        // add all of the Symbols to the alphabet
+        genDictionary(postfix);
 
         return postfix;
     }
@@ -184,6 +181,23 @@ public class InfixToPostfix {
         }
 
         return input;
+    }
+
+    private void genDictionary (Stack<Symbol> symbols) {
+        
+        for (int i = 0; i < symbols.size(); i++) {
+            Symbol temp = symbols.elementAt(i);
+            // Checks if it already exists on the alphabet
+            if (!dict.containsKey(temp.id)) {
+                // Not already part of the dictionary
+
+                if (!isOperator(temp)) {
+                    // Adds to the dictionary
+                    dict.put(temp.id, temp);
+                }
+            }
+        }
+
     }
 
     /*
