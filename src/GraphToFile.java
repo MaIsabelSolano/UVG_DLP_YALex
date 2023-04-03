@@ -67,8 +67,13 @@ public class GraphToFile {
                 if (t.getSymbol().c_id == '+') label = "PLUS";
                 if (t.getSymbol().c_id == '-') label = "MINUS";
                 if (t.getSymbol().c_id == '/') label = "DIV";
-                if (t.getSymbol().c_id == '.') label = "DOT";
-                
+                if (t.getSymbol().c_id == '.') label = "POINT";
+                if (t.getSymbol().c_id == '=') label = "EQ";
+                if (t.getSymbol().c_id == ':') label = "ASSIGNOP";
+                if (t.getSymbol().c_id == ';') label = "SEMICOLON";
+                if (t.getSymbol().c_id == '<') label = "LT";
+                if (t.getSymbol().c_id == '>') label = "GT";
+
                 writer.write(
                     "\n\t" +
                     t.getOriginState().toString() +
@@ -133,7 +138,12 @@ public class GraphToFile {
                 if (t.getSymbol().c_id == '+') label = "PLUS";
                 if (t.getSymbol().c_id == '-') label = "MINUS";
                 if (t.getSymbol().c_id == '/') label = "DIV";
-                if (t.getSymbol().c_id == '.') label = "DOT";
+                if (t.getSymbol().c_id == '.') label = "POINT";
+                if (t.getSymbol().c_id == '=') label = "EQ";
+                if (t.getSymbol().c_id == ':') label = "ASSIGNOP";
+                if (t.getSymbol().c_id == ';') label = "SEMICOLON";
+                if (t.getSymbol().c_id == '<') label = "LT";
+                if (t.getSymbol().c_id == '>') label = "GT";
 
                 writer.write(
                     "\n\t" +

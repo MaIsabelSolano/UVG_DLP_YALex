@@ -286,6 +286,7 @@ public class Yalex_reader{
             line = line.substring(1);
             if (line.charAt(0) == '|') line = line.substring(2);
             line = line.replaceAll("\'", "");
+            line = line.replaceAll("\"", "");
             System.out.println(line);
 
             String[] line_arr = line.split(" ", 2);
@@ -323,6 +324,13 @@ public class Yalex_reader{
                 // token needs to be added
 
                 Token currentToken = new Token(line_arr[0], true);
+
+                // // special tokens
+                // if (line_arr.length > 1) {
+                //     if ((line_arr[0] + line_arr[1]).equals(":=")) {
+                        
+                //     }
+                // }
 
                 Symbol sym = new Symbol(line_arr[0].charAt(0));
                 
@@ -566,17 +574,52 @@ public class Yalex_reader{
                     
                 }
             } else if (value[c] == '\"') {
-                // some values togheder
+                // some values together
                 c ++; 
                 while (value[c] != '\"') {
-                    // Add simple definition
+                    if (value[c] == '\\') {
+                        // special value 
+                        if (value[c + 1] == 't') {
+                            String lexemeName = "\t";
+                            Token t = new Token(lexemeName, true);
+                            currentToken.addValueToken(t);
+    
+                            // check if is not the last | to not include it
+                            currentToken.addValueToken(or);
+    
+                            c += 2;
+
+                        } else if (value[c + 1] == 's') {
+                            String lexemeName = " ";
+                            Token t = new Token(lexemeName, true);
+                            currentToken.addValueToken(t);
+    
+                            // check if is not the last | to not include it
+                            currentToken.addValueToken(or);
+    
+                            c += 2;
+                            
+                        } else if (value[c + 1] == 'n') {
+                            String lexemeName = "\n";
+                            Token t = new Token(lexemeName, true);
+                            currentToken.addValueToken(t);
+    
+                            // check if is not the last | to not include it
+                            currentToken.addValueToken(or);
+    
+                            c += 2;
+                            
+                        }
+                    
+                    } else {
+                        // Add simple definition
                     String lexemeName = "" + value[c];
                     Token t = new Token(lexemeName, true);
                     currentToken.addValueToken(t);
 
                     currentToken.addValueToken(or);
 
-                    c ++;
+                    c ++;}
                 }
 
             } else {
