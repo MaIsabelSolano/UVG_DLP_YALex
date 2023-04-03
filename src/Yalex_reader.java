@@ -327,7 +327,7 @@ public class Yalex_reader{
         Symbol or = new Symbol('|');
         or.setOperator(true);
 
-        System.out.println("\n_______Rules_______");
+        // System.out.println("\n_______Rules_______");
 
         for (String line: rules) {
             line = line.replaceAll("\\s+", " ");
@@ -335,7 +335,7 @@ public class Yalex_reader{
             if (line.charAt(0) == '|') line = line.substring(2);
             line = line.replaceAll("\'", "");
             line = line.replaceAll("\"", "");
-            System.out.println(line);
+            //System.out.println(line);
 
             String[] line_arr = line.split(" ", 2);
 
@@ -351,9 +351,9 @@ public class Yalex_reader{
                 temp.add(LEFTPARAM);
                 temp.addAll(Production(currentToken, new ArrayList<Symbol>()));
                 temp.add(RIGHTPARAM);
-                System.out.println("\nProd:\n");
-                for (Symbol s: temp) System.out.print(s.c_id);
-                System.out.println();
+                //System.out.println("\nProd:\n");
+                // for (Symbol s: temp) System.out.print(s.c_id);
+                // System.out.println();
 
                 regex.addAll(temp);
                 regex.add(or);
@@ -374,7 +374,7 @@ public class Yalex_reader{
 
                 Symbol sym = new Symbol(line_arr[0].charAt(0));
                 
-                System.out.println("\nProd: " + sym);
+                //System.out.println("\nProd: " + sym);
                 // Add to regex
                 regex.add(sym);
                 regex.add(or);

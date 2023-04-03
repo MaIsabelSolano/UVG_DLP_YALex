@@ -19,7 +19,7 @@ public class Controller {
         GraphToFile gtf = new GraphToFile();
         TerminalCommand tc = new TerminalCommand();
 
-        Yalex_reader yr = new Yalex_reader("input/slr-4.yal");
+        Yalex_reader yr = new Yalex_reader("input/slr-3.yal");
         ArrayList<Symbol> regex = yr.read();
 
         System.out.println("\n_______Regex_______");
