@@ -142,7 +142,7 @@ public class Yalex_reader{
     }
 
     /**
-     * Thirt step to convert Grammar into regular expression. 
+     * Third step to convert Grammar into regular expression. 
      * Having the ArrayList 'lets' definded in the last step,
      * letsToTokens browses through that information recognizing
      * the name of the token and its value, that could either
