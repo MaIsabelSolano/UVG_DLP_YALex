@@ -57,9 +57,14 @@ public class GraphToFile {
             // -Transitions
             for (Transition t: afn.getTransitions()) {
                 String label = ""+t.getSymbol().c_id;
-                if (t.getSymbol().c_id == '\n') label = "eof";
+                // check for special symbols
+                if (t.getSymbol().c_id == '\n') label = "eol";
                 if (t.getSymbol().c_id == '\t') label = "tab";
                 if (t.getSymbol().c_id == ' ') label = "space";
+                if (t.getSymbol().c_id == '(') label = "LPAREN";
+                if (t.getSymbol().c_id == ')') label = "RPAREN";
+                if (t.getSymbol().c_id == '*') label = "TIMES";
+                if (t.getSymbol().c_id == '+') label = "PLUS";
 
                 writer.write(
                     "\n\t" +
@@ -115,9 +120,14 @@ public class GraphToFile {
             // -Transitions
             for (Transition t: afd.getTransitions()) {
                 String label = ""+t.getSymbol().c_id;
-                if (t.getSymbol().c_id == '\n') label = "eof";
+                // check for special symbols
+                if (t.getSymbol().c_id == '\n') label = "eol";
                 if (t.getSymbol().c_id == '\t') label = "tab";
                 if (t.getSymbol().c_id == ' ') label = "space";
+                if (t.getSymbol().c_id == '(') label = "LPAREN";
+                if (t.getSymbol().c_id == ')') label = "RPAREN";
+                if (t.getSymbol().c_id == '*') label = "TIMES";
+                if (t.getSymbol().c_id == '+') label = "PLUS";
 
                 writer.write(
                     "\n\t" +

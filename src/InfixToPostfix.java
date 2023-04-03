@@ -191,7 +191,7 @@ public class InfixToPostfix {
             if (!dict.containsKey(temp.id)) {
                 // Not already part of the dictionary
 
-                if (!isOperator(temp)) {
+                if (!temp.isOperator()) {
                     // Adds to the dictionary
                     dict.put(temp.id, temp);
                 }

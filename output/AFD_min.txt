@@ -1,27 +1,14 @@
 digraph AFN
 {
 	rankdir="LR";
-	0 [shape=circle, color=gray28];
-	1 [shape=doublecircle];
 	2 [shape=doublecircle];
+	1 [shape=doublecircle];
+	0 [shape=circle, color=gray28];
 	3 [shape=doublecircle];
 	initial [label = "", shape=none, height = .0, width = .0]
 
 	initial -> 0
 
-	0 -> 1 [label=space];
-	0 -> 2 [label=A];
-	0 -> 2 [label=a];
-	0 -> 2 [label=B];
-	0 -> 2 [label=b];
-	0 -> 2 [label=C];
-	0 -> 2 [label=c];
-	0 -> 3 [label=LPAREN];
-	0 -> 1 [label=tab];
-	0 -> 3 [label=RPAREN];
-	0 -> 1 [label=eol];
-	0 -> 3 [label=TIMES];
-	0 -> 3 [label=PLUS];
 	2 -> 2 [label=A];
 	2 -> 2 [label=a];
 	2 -> 2 [label=B];
@@ -35,4 +22,17 @@ digraph AFN
 	1 -> 1 [label=space];
 	1 -> 1 [label=tab];
 	1 -> 1 [label=eol];
+	0 -> 1 [label=space];
+	0 -> 2 [label=A];
+	0 -> 2 [label=a];
+	0 -> 2 [label=B];
+	0 -> 2 [label=b];
+	0 -> 2 [label=C];
+	0 -> 2 [label=c];
+	0 -> 3 [label=LPAREN];
+	0 -> 1 [label=tab];
+	0 -> 3 [label=RPAREN];
+	0 -> 1 [label=eol];
+	0 -> 3 [label=TIMES];
+	0 -> 3 [label=PLUS];
 }
