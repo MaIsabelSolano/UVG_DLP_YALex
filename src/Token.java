@@ -8,6 +8,7 @@ public class Token {
     private ArrayList<Token> value = new ArrayList<>();
     private String function; 
     private boolean terminal;
+    private boolean isOperator = false;
 
     public Token(String lexeme, ArrayList<Token> value, boolean terminal) {
         this.lexeme = lexeme;
@@ -39,12 +40,24 @@ public class Token {
         return value;
     }
 
+    public boolean isOperator() {
+        return isOperator;
+    }
+
     public boolean isTerminal() {
         return terminal;
     }
 
     public void setFunction(String function) {
         this.function = function;
+    }
+
+    public void setAsOperator() {
+        this.isOperator = true;
+    }
+
+    public void setOperator(boolean isOperator) {
+        this.isOperator = isOperator;
     }
 
     public void addValueToken(Token t) {
